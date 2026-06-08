@@ -1,0 +1,33 @@
+version: 2
+
+sources:
+  - name: raw
+    description: >
+      Landing zone populated by the Python loader (pipeline/load.py) from the UCI
+      Online Retail II dataset. Treated as an immutable mirror of the source; all cleaning
+      happens in dbt downstream.
+    schema: raw
+    # Freshness SLA: the loader stamps _loaded_at on every row. If the newest row is older
+    # than the thresholds below, `dbt source freshness` warns/fails — the data-delivery SLA.
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 36, period: hour}
+      error_after: {count: 7, period: day}
+    tables:
+      - name: online_retail
+        description: Raw invoice line items, one row per scanned product line per invoice.
+        columns:
+          - name: invoice
+            description: Invoice number. A leading 'C' marks a cancellation.
+          - name: stock_code
+            description: Product (SKU) code.
+          - name: quantity
+            description: Units on the line; negative for returns/cancellations.
+          - name: price
+            description: Unit price in GBP; non-positive values are adjustments, not sales.
+          - name: customer_id
+            description: Customer identifier; null for guest/unattributed transactions.
+          - name: invoice_date
+            description: Invoice timestamp.
+          - name: country
+            description: Customer country.

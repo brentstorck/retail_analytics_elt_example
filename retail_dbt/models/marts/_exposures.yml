@@ -1,0 +1,24 @@
+version: 2
+
+exposures:
+  - name: executive_revenue_dashboard
+    label: "Executive Revenue & Retention Dashboard"
+    type: dashboard
+    maturity: medium
+    url: https://app.hex.tech/   # replace with the published Hex app URL
+    description: >
+      Company-wide self-serve dashboard (built in Hex) covering revenue trend, cohort
+      retention, RFM segments, geo performance, and pipeline health. Registering it as an
+      exposure makes the downstream consumer visible in dbt lineage, so a breaking change
+      to a mart is caught before it reaches the dashboard.
+    depends_on:
+      - ref('mart_revenue_daily')
+      - ref('mart_revenue_monthly')
+      - ref('mart_customer_cohorts')
+      - ref('mart_rfm_segments')
+      - ref('mart_country_performance')
+      - ref('mart_product_performance')
+      - ref('mart_data_quality')
+    owner:
+      name: Brent Storck
+      email: brentstorck@gmail.com

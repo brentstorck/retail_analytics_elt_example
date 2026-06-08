@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: mart_data_quality
+    description: >
+      One-row pipeline-health snapshot (row counts, key cardinalities, and the rates of
+      guest / cancellation / return / non-revenue lines) for monitoring data integrity.
+    columns:
+      - name: n_rows
+        description: Total cleaned invoice lines in staging.
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+      - name: pct_cancellation_lines
+        data_tests:
+          - dbt_utils.accepted_range: {min_value: 0, max_value: 100}

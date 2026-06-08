@@ -1,0 +1,13 @@
+# dbt connection profile. Shipped in-repo so the project is self-contained; point dbt at it
+# with DBT_PROFILES_DIR (the pipeline runner and run.ps1 set this automatically).
+#
+# DuckDB is used as a local, zero-setup warehouse. Switching to Snowflake/BigQuery is a
+# profile change only — the models, tests, and docs are unchanged.
+retail_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # Same env var the Python loader writes to, so they always target one warehouse file.
+      path: "{{ env_var('DUCKDB_PATH', '../warehouse/retail.duckdb') }}"
+      threads: 4

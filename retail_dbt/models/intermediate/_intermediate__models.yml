@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_invoice_lines_cleaned
+    description: >
+      Revenue-bearing invoice lines: non-revenue adjustments (price <= 0) removed,
+      cancellations and returns retained with negative revenue so net metrics reconcile.
+    columns:
+      - name: invoice_line_id
+        data_tests: [unique, not_null]
+      - name: line_revenue
+        description: Net revenue for the line (negative for returns/cancellations).
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: -200000
+              max_value: 200000
+
+  - name: int_orders
+    description: One row per invoice (order grain), with net order revenue and flags.
+    columns:
+      - name: invoice_id
+        description: Invoice number — primary key at order grain.
+        data_tests: [unique, not_null]
+      - name: order_date
+        data_tests: [not_null]
+      - name: order_revenue
+        description: Net revenue across all lines on the invoice.

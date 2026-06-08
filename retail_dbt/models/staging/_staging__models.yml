@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_online_retail
+    description: >
+      Cleaned, typed, one-row-per-invoice-line view of the raw data with row-level flags
+      (cancellation, return, guest, non-revenue) and a surrogate primary key.
+    columns:
+      - name: invoice_line_id
+        description: Surrogate key for the invoice line (unique grain of this model).
+        data_tests:
+          - unique
+          - not_null
+      - name: invoice_id
+        description: Invoice number; leading 'C' indicates a cancellation.
+        data_tests:
+          - not_null
+      - name: stock_code
+        description: Uppercased product code.
+        data_tests:
+          - not_null
+      - name: quantity
+        description: Units on the line (negative for returns/cancellations).
+        data_tests:
+          - not_null
+      - name: unit_price
+        description: Unit price in GBP.
+        data_tests:
+          - not_null
+      - name: line_revenue
+        description: quantity * unit_price, rounded to pence.
+      - name: is_cancellation
+        description: True when the invoice is a cancellation.
+        data_tests:
+          - accepted_values:
+              values: [true, false]
+              quote: false
+      - name: is_return
+        description: True when quantity is negative.
+        data_tests:
+          - accepted_values:
+              values: [true, false]
+              quote: false
+      - name: invoice_date
+        description: Calendar date of the invoice.
+        data_tests:
+          - not_null

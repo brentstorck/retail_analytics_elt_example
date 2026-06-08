@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: mart_revenue_daily
+    description: Daily net revenue, orders, AOV, and new vs returning customer counts.
+    columns:
+      - name: order_date
+        data_tests: [unique, not_null]
+      - name: revenue
+        data_tests: [not_null]
+
+  - name: mart_revenue_monthly
+    description: Monthly revenue with MoM change/percent and customer mix.
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+
+  - name: mart_customer_cohorts
+    description: Acquisition-cohort retention by months since first order.
+    columns:
+      - name: retention_rate
+        description: Share of the cohort active in the given month (0..1).
+        data_tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: months_since_cohort
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: mart_rfm_segments
+    description: Per-customer RFM scores and segment label.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: r_score
+        data_tests:
+          - dbt_utils.accepted_range: {min_value: 1, max_value: 5}
+      - name: rfm_segment
+        data_tests:
+          - accepted_values:
+              values:
+                - Champions
+                - Loyal Customers
+                - New / Promising
+                - Potential Loyalists
+                - At Risk
+                - Cannot Lose Them
+                - Hibernating / Lost
+                - Needs Attention
+
+  - name: mart_country_performance
+    description: Revenue, customers, AOV, and revenue share by country and GTM region.
+    columns:
+      - name: country
+        data_tests: [unique, not_null]
+      - name: region
+        data_tests: [not_null]
+
+  - name: mart_product_performance
+    description: Product revenue leaderboard with return rate and revenue share.
+    columns:
+      - name: stock_code
+        data_tests: [unique, not_null]
+      - name: revenue_rank
+        data_tests: [unique, not_null]

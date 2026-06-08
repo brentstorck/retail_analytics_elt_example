@@ -1,0 +1,18 @@
+version: 2
+
+seeds:
+  - name: country_region
+    description: >
+      Manually maintained mapping of source country names to GTM reporting regions.
+      Demonstrates dbt seeds for small, analyst-owned reference data that enriches marts
+      (used by mart_country_performance).
+    columns:
+      - name: country
+        description: Country string exactly as it appears in the source data.
+        data_tests:
+          - unique
+          - not_null
+      - name: region
+        description: Roll-up region used in geo reporting.
+        data_tests:
+          - not_null

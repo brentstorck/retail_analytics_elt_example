@@ -1,0 +1,14 @@
+# Core ELT + warehouse + transformation
+dbt-duckdb>=1.9,<2.0
+duckdb>=1.1
+pandas>=2.0
+openpyxl>=3.1          # read the Online Retail II .xlsx
+requests>=2.31         # download the dataset
+
+# Local BI preview (self-serve dashboards over the marts)
+streamlit>=1.30
+plotly>=5.20
+
+# Note: Airflow is installed inside the Docker image (see airflow/), not here.
+# It pins many transitive deps and does not run natively on Windows, so it is kept
+# out of the base environment to keep `pip install -r requirements.txt` fast and portable.

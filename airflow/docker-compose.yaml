@@ -1,0 +1,26 @@
+# Minimal LOCAL/DEMO Airflow (standalone: SequentialExecutor + SQLite). It exists to show
+# the pipeline running under orchestration on any machine with Docker. A production setup
+# would use the LocalExecutor/CeleryExecutor with a Postgres metadata DB and a real
+# scheduler/webserver split — the DAG itself is unchanged.
+#
+#   docker compose up -d --build
+#   # UI: http://localhost:8080  (user: admin; password printed to the logs / saved to
+#   #     standalone_admin_password.txt inside the container)
+#   # then trigger the "retail_analytics" DAG.
+
+services:
+  airflow:
+    build: .
+    image: retail-analytics-airflow:latest
+    command: standalone
+    ports:
+      - "8080:8080"
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+      PROJECT_DIR: /opt/airflow/project
+      DUCKDB_PATH: /opt/airflow/project/warehouse/retail.duckdb
+      PYTHONPATH: /opt/airflow/project
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ../:/opt/airflow/project      # mount the whole repo (pipeline/ + retail_dbt/)

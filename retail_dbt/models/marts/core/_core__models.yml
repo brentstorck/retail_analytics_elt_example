@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: fct_invoice_lines
+    description: Fact table at invoice-line grain. Lowest level of the star schema.
+    columns:
+      - name: invoice_line_id
+        description: Surrogate primary key.
+        data_tests: [unique, not_null]
+      - name: invoice_id
+        description: FK to fct_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('fct_orders')
+              field: invoice_id
+      - name: stock_code
+        description: FK to dim_products.
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: stock_code
+
+  - name: fct_orders
+    description: Fact table at order (invoice) grain with net revenue.
+    columns:
+      - name: invoice_id
+        description: Primary key (one row per invoice).
+        data_tests: [unique, not_null]
+      - name: customer_id
+        description: FK to dim_customers (for attributed, non-cancelled orders).
+        data_tests:
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+              config:
+                where: "customer_id is not null and not is_cancellation"
+      - name: order_revenue
+        description: Net revenue for the order.
+
+  - name: dim_customers
+    description: One row per known (non-guest) customer with lifetime + RFM input metrics.
+    columns:
+      - name: customer_id
+        description: Primary key.
+        data_tests: [unique, not_null]
+      - name: cohort_month
+        description: Month of the customer's first non-cancelled order.
+        data_tests: [not_null]
+      - name: recency_days
+        description: Days from the customer's last order to the dataset's latest order.
+        data_tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: dim_products
+    description: One row per product (stock code) with sales/return aggregates.
+    columns:
+      - name: stock_code
+        description: Primary key.
+        data_tests: [unique, not_null]
+
+  - name: dim_dates
+    description: Daily date spine covering the dataset window.
+    columns:
+      - name: date_key
+        description: Primary key (one row per day).
+        data_tests: [unique, not_null]
