@@ -16,7 +16,7 @@ to demonstrate the *exact* toolchain and patterns that role uses, working togeth
 
 > Honesty note for anyone extending this: this is a personal portfolio project on a
 > public dataset (UCI Online Retail II). It is not production infrastructure for a real
-> company. Keep claims about it accurate — "built to demonstrate X," not "ran X in
+> company. Keep claims about it accurate: "built to demonstrate X," not "ran X in
 > production." The engineering is real; the business is illustrative.
 
 ## The stack and why each piece is here
@@ -33,7 +33,7 @@ to demonstrate the *exact* toolchain and patterns that role uses, working togeth
 
 DuckDB is used as the warehouse so the project runs on any laptop with no cloud account.
 Everything dbt does here (sources, staging → marts, tests, docs, freshness) is identical
-against Snowflake/BigQuery — only the `profiles.yml` adapter changes. Spark is intentionally
+against Snowflake/BigQuery; only the `profiles.yml` adapter changes. Spark is intentionally
 **not** used: at this data scale it would be cargo-culting, and the JD does not ask for it.
 
 ## Architecture (data flow)
@@ -74,7 +74,7 @@ UCI Online Retail II (.xlsx, two sheets)
 - **Schemas:** custom schemas land verbatim (`staging`, `intermediate`, `marts`) via the
   `generate_schema_name` macro override in `macros/`.
 - **Sources:** declared in `models/staging/_staging__sources.yml` with `loaded_at_field`
-  and `freshness` (warn 36h / error 7d) — this is the data SLA.
+  and `freshness` (warn 36h / error 7d), the data SLA.
 - **Tests = data integrity:** generic tests (`unique`, `not_null`, `relationships`,
   `accepted_values`, `dbt_utils.accepted_range`) live next to models in `_*.yml`.
   Cross-model invariants live as singular tests in `tests/` (e.g. order revenue must

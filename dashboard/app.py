@@ -30,7 +30,7 @@ def q(sql: str) -> pd.DataFrame:
         con.close()
 
 
-st.title("Retail Analytics — Revenue & Retention")
+st.title("Retail Analytics: Revenue & Retention")
 st.caption(f"Reading marts from `{DUCKDB_PATH}`")
 
 if not Path(DUCKDB_PATH).exists():

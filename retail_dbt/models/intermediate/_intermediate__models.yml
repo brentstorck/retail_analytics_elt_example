@@ -19,7 +19,7 @@ models:
     description: One row per invoice (order grain), with net order revenue and flags.
     columns:
       - name: invoice_id
-        description: Invoice number — primary key at order grain.
+        description: Invoice number, the primary key at order grain.
         data_tests: [unique, not_null]
       - name: order_date
         data_tests: [not_null]

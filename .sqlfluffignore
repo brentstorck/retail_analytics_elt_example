@@ -1,0 +1,7 @@
+# Models that call dbt_utils macros (generate_surrogate_key, date_spine) which the jinja
+# templater can't resolve without the full dbt templater. Excluded so lint stays clean.
+# Paths are relative to this file (repo root).
+retail_dbt/models/staging/stg_online_retail.sql
+retail_dbt/models/marts/core/dim_dates.sql
+retail_dbt/target/
+retail_dbt/dbt_packages/

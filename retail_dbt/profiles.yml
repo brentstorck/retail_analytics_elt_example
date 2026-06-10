@@ -2,7 +2,7 @@
 # with DBT_PROFILES_DIR (the pipeline runner and run.ps1 set this automatically).
 #
 # DuckDB is used as a local, zero-setup warehouse. Switching to Snowflake/BigQuery is a
-# profile change only — the models, tests, and docs are unchanged.
+# profile change only; the models, tests, and docs are unchanged.
 retail_analytics:
   target: dev
   outputs:

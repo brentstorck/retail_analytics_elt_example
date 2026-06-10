@@ -16,6 +16,7 @@ warehouse/*.duckdb.wal
 *.duckdb.wal
 
 # dbt
+dbt_build*.log
 retail_dbt/target/
 retail_dbt/dbt_packages/
 retail_dbt/logs/

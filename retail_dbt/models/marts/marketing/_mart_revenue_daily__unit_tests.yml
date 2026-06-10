@@ -1,0 +1,28 @@
+version: 2
+
+unit_tests:
+  - name: mart_revenue_daily_new_returning_and_gap_fill
+    description: >
+      Cancelled orders are excluded; a customer's first-date order counts as new and later
+      orders as returning; and a day with no sales is gap-filled to zero via dim_dates.
+    model: mart_revenue_daily
+    given:
+      - input: ref('fct_orders')
+        rows:
+          - {invoice_id: 'inv1', customer_id: 'C1', order_date: '2011-03-01', total_quantity: 2, order_revenue: 100.00, is_cancellation: false}
+          - {invoice_id: 'inv3', customer_id: 'C1', order_date: '2011-03-03', total_quantity: 3, order_revenue: 30.00,  is_cancellation: false}
+          - {invoice_id: 'inv4', customer_id: 'C9', order_date: '2011-03-03', total_quantity: 1, order_revenue: 20.00,  is_cancellation: true}
+      - input: ref('dim_customers')
+        rows:
+          - {customer_id: 'C1', first_order_date: '2011-03-01'}
+          - {customer_id: 'C9', first_order_date: '2011-03-03'}
+      - input: ref('dim_dates')
+        rows:
+          - {date_key: '2011-03-01'}
+          - {date_key: '2011-03-02'}
+          - {date_key: '2011-03-03'}
+    expect:
+      rows:
+        - {order_date: '2011-03-01', n_orders: 1, n_active_customers: 1, n_new_customers: 1, n_returning_customers: 0, n_units: 2, revenue: 100.00, avg_order_value: 100.00}
+        - {order_date: '2011-03-02', n_orders: 0, n_active_customers: 0, n_new_customers: 0, n_returning_customers: 0, n_units: 0, revenue: 0.00,   avg_order_value: null}
+        - {order_date: '2011-03-03', n_orders: 1, n_active_customers: 1, n_new_customers: 0, n_returning_customers: 1, n_units: 3, revenue: 30.00,  avg_order_value: 30.00}

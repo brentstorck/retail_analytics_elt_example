@@ -1,5 +1,5 @@
 -- Staging: 1:1 with the raw source. Rename to snake_case, cast types, trim strings, and
--- derive row-level business flags. No filtering or aggregation happens here — that keeps
+-- derive row-level business flags. No filtering or aggregation happens here, which keeps
 -- staging an honest, debuggable mirror of the source. A surrogate key is added so every
 -- downstream line item has a stable, testable primary key.
 

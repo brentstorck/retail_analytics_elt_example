@@ -1,6 +1,6 @@
 """Airflow DAG: orchestrate the retail analytics ELT on a daily schedule.
 
-The DAG is thin on purpose — it imports the same `pipeline` functions used by
+The DAG is thin on purpose: it imports the same `pipeline` functions used by
 `python -m pipeline.run` and shells out to dbt. Business logic lives in the package and
 the dbt project, not in the orchestrator. Task retries and SLAs encode the data-delivery
 guarantees described in the job spec.

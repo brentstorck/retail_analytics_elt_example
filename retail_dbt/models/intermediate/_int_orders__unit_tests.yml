@@ -1,0 +1,18 @@
+version: 2
+
+# dbt unit test: validates model LOGIC against mocked inputs (distinct from data tests,
+# which validate real data). Runs as part of `dbt build`.
+unit_tests:
+  - name: int_orders_aggregates_lines_to_order_grain
+    description: Multiple lines on one invoice roll up to a single order with summed revenue and quantity.
+    model: int_orders
+    given:
+      - input: ref('int_invoice_lines_cleaned')
+        rows:
+          - {invoice_id: 'A', customer_id: '1', country: 'United Kingdom', invoiced_at: '2011-01-15 10:00:00', quantity: 2, line_revenue: 10.00, is_cancellation: false, is_guest: false}
+          - {invoice_id: 'A', customer_id: '1', country: 'United Kingdom', invoiced_at: '2011-01-15 10:00:00', quantity: 1, line_revenue: 3.00,  is_cancellation: false, is_guest: false}
+          - {invoice_id: 'B', customer_id: '2', country: 'France',         invoiced_at: '2011-02-20 09:00:00', quantity: 4, line_revenue: 10.00, is_cancellation: false, is_guest: false}
+    expect:
+      rows:
+        - {invoice_id: 'A', customer_id: '1', country: 'United Kingdom', ordered_at: '2011-01-15 10:00:00', order_date: '2011-01-15', order_month: '2011-01-01', n_lines: 2, total_quantity: 3, order_revenue: 13.00, is_cancellation: false, is_guest: false}
+        - {invoice_id: 'B', customer_id: '2', country: 'France',         ordered_at: '2011-02-20 09:00:00', order_date: '2011-02-20', order_month: '2011-02-01', n_lines: 1, total_quantity: 4, order_revenue: 10.00, is_cancellation: false, is_guest: false}

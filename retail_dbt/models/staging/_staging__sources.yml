@@ -8,7 +8,7 @@ sources:
       happens in dbt downstream.
     schema: raw
     # Freshness SLA: the loader stamps _loaded_at on every row. If the newest row is older
-    # than the thresholds below, `dbt source freshness` warns/fails — the data-delivery SLA.
+    # than the thresholds below, `dbt source freshness` warns/fails: the data-delivery SLA.
     loaded_at_field: _loaded_at
     freshness:
       warn_after: {count: 36, period: hour}

@@ -1,6 +1,6 @@
 """Extract: download and cache the Online Retail II dataset.
 
-Idempotent — if the file already exists and looks complete, the download is skipped.
+Idempotent: if the file already exists and looks complete, the download is skipped.
 Tries the direct .xlsx host first, then a .zip mirror (UCI serves both at different times).
 """
 from __future__ import annotations

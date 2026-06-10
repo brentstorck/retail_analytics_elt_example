@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Builds the whole dbt project and runs every test on a small committed data sample, so CI
+# is fast, deterministic, and needs no cloud warehouse or dataset download.
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      DUCKDB_PATH: ${{ github.workspace }}/warehouse/retail.duckdb
+      DBT_PROFILES_DIR: ${{ github.workspace }}/retail_dbt
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "dbt-duckdb>=1.9,<2.0" "duckdb>=1.1" "pandas>=2.0" openpyxl requests
+          pip install -r requirements-dev.txt
+
+      - name: Python unit tests (pytest)
+        run: pytest
+
+      - name: Load sample data into DuckDB
+        run: python -c "from pipeline.load import load_sample; load_sample()"
+
+      - name: dbt deps
+        working-directory: retail_dbt
+        run: dbt deps
+
+      - name: dbt build (models + data tests + unit tests)
+        working-directory: retail_dbt
+        run: dbt build
+
+      - name: dbt source freshness
+        working-directory: retail_dbt
+        run: dbt source freshness
+        continue-on-error: true   # depends on load time; informational in CI
+
+      - name: SQL lint (sqlfluff, informational)
+        run: sqlfluff lint retail_dbt/models || true
+        continue-on-error: true

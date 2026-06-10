@@ -1,0 +1,4 @@
+# Dev / CI tooling (not needed to run the pipeline itself).
+pytest>=7.4
+sqlfluff>=3.0
+kaleido>=0.2          # static PNG export for the README charts (scripts/export_charts.py)

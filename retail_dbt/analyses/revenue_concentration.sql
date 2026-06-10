@@ -1,5 +1,5 @@
 -- Analysis (compiled by dbt, not materialized): how concentrated is revenue?
--- Answers "what share of revenue comes from the top 10% of customers?" — a question a
+-- Answers "what share of revenue comes from the top 10% of customers?", a question a
 -- GTM lead asks. Run `dbt compile` and copy the compiled SQL, or paste into Hex.
 
 with ranked as (

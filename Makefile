@@ -3,7 +3,7 @@
 
 DBT = cd retail_dbt && dbt
 
-.PHONY: install extract load build test docs export run dashboard clean all
+.PHONY: install extract load build test unit lint docs export run dashboard sample clean all
 
 install:
 	pip install -r requirements.txt
@@ -35,6 +35,15 @@ run:             ## full pipeline, no Airflow
 
 dashboard:
 	streamlit run dashboard/app.py
+
+unit:            ## python unit tests (pytest)
+	pytest
+
+lint:            ## sql lint (informational)
+	sqlfluff lint retail_dbt/models
+
+sample:          ## load the small CI fixture instead of the full dataset
+	python -c "from pipeline.load import load_sample; load_sample()"
 
 clean:
 	rm -rf retail_dbt/target retail_dbt/dbt_packages retail_dbt/logs

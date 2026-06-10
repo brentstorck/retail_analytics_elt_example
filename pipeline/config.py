@@ -35,6 +35,10 @@ DATASET_MIRRORS = [
 ]
 XLSX_PATH = DATA_DIR / "online_retail_II.xlsx"
 
+# Small committed sample of the raw data, used by CI (and quick local checks) so dbt can
+# build and test fast and offline without downloading the full ~45 MB dataset.
+SAMPLE_FIXTURE = REPO_ROOT / "tests" / "fixtures" / "sample_online_retail.csv"
+
 # --- raw landing zone in the warehouse -----------------------------------------
 RAW_SCHEMA = "raw"
 RAW_TABLE = "online_retail"

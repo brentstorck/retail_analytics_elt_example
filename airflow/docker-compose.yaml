@@ -1,7 +1,7 @@
 # Minimal LOCAL/DEMO Airflow (standalone: SequentialExecutor + SQLite). It exists to show
 # the pipeline running under orchestration on any machine with Docker. A production setup
 # would use the LocalExecutor/CeleryExecutor with a Postgres metadata DB and a real
-# scheduler/webserver split — the DAG itself is unchanged.
+# scheduler/webserver split, but the DAG itself is unchanged.
 #
 #   docker compose up -d --build
 #   # UI: http://localhost:8080  (user: admin; password printed to the logs / saved to

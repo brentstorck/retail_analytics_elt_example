@@ -1,0 +1,35 @@
+[sqlfluff]
+# Lint dbt SQL without standing up the full dbt templater: the jinja templater with
+# apply_dbt_builtins stubs ref()/source()/config()/is_incremental() so models parse.
+# (Models that call dbt_utils macros are listed in .sqlfluffignore.)
+templater = jinja
+dialect = duckdb
+max_line_length = 120
+# Rules excluded as deliberate house style (not defects):
+#   LT01 - we align `as`/`then` with extra spaces for readability
+#   ST07 - we prefer `using (col)` joins over `on a.col = b.col`
+#   RF04 - keywords-as-identifiers; ST06/AM04 - select-* ordering/column-count in CTEs
+#   LT05 - long, readable comment/expression lines
+exclude_rules = RF04, ST06, AM04, LT01, LT05, ST07
+
+[sqlfluff:rules:aliasing.table]
+aliasing = implicit   # `from orders o`, not `from orders as o`
+
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit   # `sum(x) as total`, always
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = true
+
+[sqlfluff:indentation]
+indented_joins = false
+template_blocks_indent = false
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.identifiers]
+capitalisation_policy = lower
