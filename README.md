@@ -1,6 +1,6 @@
 # Retail Analytics Platform
 
-[![CI](https://github.com/brentstorck/retail-analytics-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/brentstorck/retail-analytics-platform/actions/workflows/ci.yml)
+[![CI](https://github.com/brentstorck/retail_analytics_elt_example/actions/workflows/ci.yml/badge.svg)](https://github.com/brentstorck/retail_analytics_elt_example/actions/workflows/ci.yml)
 
 End-to-end **analytics engineering** project: raw e-commerce transaction logs become
 canonical, tested data models, then company metrics, then self-serve dashboards.

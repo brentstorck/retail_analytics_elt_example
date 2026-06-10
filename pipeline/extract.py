@@ -22,7 +22,7 @@ def _looks_complete(path) -> bool:
 
 def _download(url: str) -> bytes:
     print(f"  GET {url}")
-    resp = requests.get(url, stream=True, timeout=120, headers={"User-Agent": "retail-analytics-platform"})
+    resp = requests.get(url, stream=True, timeout=120, headers={"User-Agent": "retail_analytics_elt_example"})
     resp.raise_for_status()
     chunks, total, next_mark = [], 0, 10 << 20  # log every ~10 MB
     for chunk in resp.iter_content(chunk_size=1 << 20):
